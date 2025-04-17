@@ -1,0 +1,19 @@
+Browse perfumes
+
+Leave reviews on perfumes
+
+Secure password storage with Bcrypt
+
+CORS support for frontend integration
+
+Flask
+
+Flask-SQLAlchemy
+
+Flask-Migrate
+
+Flask-Bcrypt
+
+Flask-CORS
+
+faker
