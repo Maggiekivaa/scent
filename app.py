@@ -67,8 +67,8 @@ def get_perfume(id):
 
 @app.route('/reviews', methods=['POST'])
 def create_review():
-    if not session.get('user_id'):
-        return {"error": "Unauthorized"}, 401
+    # if not session.get('user_id'):
+    #     return {"error": "Unauthorized"}, 401
 
     data = request.get_json()
     review = Review(
@@ -84,4 +84,4 @@ def create_review():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5555)

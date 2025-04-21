@@ -29,6 +29,7 @@ class Perfume(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     brand = db.Column(db.String, nullable=False)
+    image = db.Column(db.String)
 
     reviews = db.relationship('Review', back_populates='perfume', cascade='all, delete-orphan')
 
@@ -37,6 +38,7 @@ class Perfume(db.Model):
             "id": self.id,
             "name": self.name,
             "brand": self.brand,
+            "image" : self.image,
             "reviews": [review.to_dict() for review in self.reviews]
         }
 

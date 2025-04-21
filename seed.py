@@ -16,10 +16,32 @@ with app.app_context():
     users = []
     reviews = []
 
+    perfume_names = [
+    "Velvet Bloom", "Amber Noir", "Ocean Whisper", "Crimson Kiss", "Lunar Petals",
+    "Golden Mirage", "Mystic Oud", "Twilight Veil", "Vanilla Eclipse", "Silken Dusk"
+    ]
+
+    brands = [
+    "Chanel", "Dior", "Yves Saint Laurent", "Tom Ford", "Gucci",
+    "Versace", "Armani", "Prada", "Burberry", "Hermès"
+    ]  
+
+    perfume_images = [
+        "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyZnVtZXN8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1701291927826-c7775869d822?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGVyZnVtZXN8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1724157073080-fcffb8d6c956?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBlcmZ1bWVzfGVufDB8fDB8fHww",
+        "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBlcmZ1bWVzfGVufDB8fDB8fHww"
+    ]
+
     for _ in range(100):
+        name = random.choice(perfume_names) 
+        brand = random.choice(brands)
+        image = random.choice(perfume_images)
+        
         perfume = Perfume(
-            name=faker.catch_phrase(),
-            brand=faker.company()
+            name=name,
+            brand=brand,
+            image=image
         )
         perfumes.append(perfume)
 
