@@ -125,4 +125,22 @@ li {
   color: #777;
 }
 
+.login-container, .signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.perfume-header {
+  display: flex;
+
+  justify-content: space-between;
+  padding: 2em;
+}
+
+.logout-btn {
+  max-height: max-content;
+}
 

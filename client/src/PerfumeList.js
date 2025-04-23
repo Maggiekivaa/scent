@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getPerfumes, postReview } from "./api";
+import { useAuth } from "./context/AuthContext";
 
 function PerfumeList() {
+  const { user } = useAuth(); // ✅ Get the current user
   const [perfumes, setPerfumes] = useState([]);
   const [selectedPerfumeId, setSelectedPerfumeId] = useState(null);
   const [reviewText, setReviewText] = useState("");
@@ -16,14 +18,19 @@ function PerfumeList() {
   const handleReviewSubmit = (e) => {
     e.preventDefault();
 
+    if (!user) {
+      alert("You must be logged in to submit a review.");
+      return;
+    }
+
     postReview({
       perfume_id: selectedPerfumeId,
-      content: reviewText,
-      rating: parseInt(rating), // Ensure it's a number
+      comment: reviewText,
+      rating: parseInt(rating),
     })
       .then(() => {
         setReviewText("");
-        setRating(5); // Reset rating
+        setRating(5);
         setSelectedPerfumeId(null);
         alert("Review submitted successfully!");
       })
@@ -52,18 +59,25 @@ function PerfumeList() {
               <strong className="perfume-name">{perfume.name}</strong>
               <p className="perfume-brand">{perfume.brand}</p>
 
-              <button
-                onClick={() =>
-                  setSelectedPerfumeId(
-                    selectedPerfumeId === perfume.id ? null : perfume.id
-                  )
-                }
-              >
-                {selectedPerfumeId === perfume.id ? "Cancel" : "Review"}
-              </button>
+              {user && (
+                <button
+                  onClick={() =>
+                    setSelectedPerfumeId(
+                      selectedPerfumeId === perfume.id ? null : perfume.id
+                    )
+                  }
+                >
+                  {selectedPerfumeId === perfume.id ? "Cancel" : "Review"}
+                </button>
+              )}
 
-              {selectedPerfumeId === perfume.id && (
-                <form onSubmit={handleReviewSubmit} style={{ marginTop: "1rem" }}>
+              {!user && <p style={{ color: "red" }}>Login to write a review.</p>}
+
+              {selectedPerfumeId === perfume.id && user && (
+                <form
+                  onSubmit={handleReviewSubmit}
+                  style={{ marginTop: "1rem" }}
+                >
                   <label>
                     Rating:{" "}
                     <select

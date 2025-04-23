@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from models import db, User, Perfume, Review
-from sqlalchemy.exc import IntegrityError
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -15,26 +15,50 @@ app.config['SESSION_TYPE'] = 'filesystem'
 db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
-CORS(app, supports_credentials=True)
+CORS(app, origins='http://localhost:4000', supports_credentials=True)
 
 
 @app.route('/')
 def home():
     return {"message": "Welcome to the Perfume API!"}
 
+# check for logged in user
+@app.route('/me')
+def me():
+    user_id = session.get('user_id')
+    if not user_id:
+        return {"error": "Not authenticated"}, 401
+    user = User.query.get(user_id)
+    return user.to_dict()
 
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
+    print(data)
+
     try:
+        existing_user = User.query.filter_by(username=data['username']).first()
+        if existing_user:
+            return {"error": "Username already exists"}, 409
+
+        existing_email = User.query.filter_by(email=data.get('email')).first()
+        if existing_email:
+            return {"error": "Email already exists"}, 409
+
         hashed_pw = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-        user = User(username=data['username'], password_hash=hashed_pw)
+        user = User(
+            username=data['username'],
+            email=data.get('email'),
+            password_hash=hashed_pw
+        )
         db.session.add(user)
         db.session.commit()
         return user.to_dict(), 201
-    except IntegrityError:
+
+    except Exception as e:
         db.session.rollback()
-        return {"error": "Username already exists"}, 409
+        return {"error": f"Signup failed: {str(e)}"}, 500
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -67,8 +91,8 @@ def get_perfume(id):
 
 @app.route('/reviews', methods=['POST'])
 def create_review():
-    # if not session.get('user_id'):
-    #     return {"error": "Unauthorized"}, 401
+    if not session.get('user_id'):
+        return {"error": "Unauthorized"}, 401
 
     data = request.get_json()
     review = Review(
@@ -80,8 +104,6 @@ def create_review():
     db.session.add(review)
     db.session.commit()
     return review.to_dict(), 201
-
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)

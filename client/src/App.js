@@ -1,17 +1,36 @@
-import React from 'react';
-import PerfumeList from './PerfumeList';
-import ReviewForm from './ReviewForm';
-import './App.css';
 
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from './HomePage';
+import './index.css';
+import './App.css'
+import Login from './Login';
+import Signup from './Signup';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+function ProtectedRoute({ children }) {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" />;
+}
 
 function App() {
   return (
-    <div style={{ fontFamily: 'Arial', padding: '2rem' }}>
-      <h1>Scentify 🌸</h1>
-      <PerfumeList />
-      <hr />
-      <ReviewForm />
-    </div>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

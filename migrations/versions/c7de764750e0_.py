@@ -1,8 +1,8 @@
-"""add fields
+"""empty message
 
-Revision ID: bc2c61ee7ec3
+Revision ID: c7de764750e0
 Revises: 
-Create Date: 2025-04-21 22:39:43.479134
+Create Date: 2025-04-23 23:03:09.610552
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bc2c61ee7ec3'
+revision = 'c7de764750e0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -31,8 +31,7 @@ def upgrade():
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password_hash', sa.String(length=128), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('username')
+    sa.UniqueConstraint('email')
     )
     op.create_table('reviews',
     sa.Column('id', sa.Integer(), nullable=False),
